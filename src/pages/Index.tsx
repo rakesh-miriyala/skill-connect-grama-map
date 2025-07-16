@@ -1,12 +1,137 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { Header } from "@/components/Header";
+import { HeroSection } from "@/components/HeroSection";
+import { SearchResults } from "@/components/SearchResults";
+import { WorkerRegistration } from "@/components/WorkerRegistration";
+import { AdminDashboard } from "@/components/AdminDashboard";
+import { useWorkers } from "@/hooks/useWorkers";
+import { Language } from "@/components/LanguageToggle";
+import { Worker, WorkerFormData } from "@/types/worker";
+import { useToast } from "@/hooks/use-toast";
+
+type Page = 'home' | 'register' | 'admin' | 'search-results';
 
 const Index = () => {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+  const [language, setLanguage] = useState<Language>('en');
+  const [currentPage, setCurrentPage] = useState<Page>('home');
+  const [searchResults, setSearchResults] = useState<Worker[]>([]);
+  const [lastSearch, setLastSearch] = useState<{ skill: string; village: string }>({ skill: '', village: '' });
+  
+  const { workers, loading, addWorker, searchWorkers, toggleWorkerStatus, deleteWorker } = useWorkers();
+  const { toast } = useToast();
+
+  const handleSearch = (skill: string, village: string) => {
+    const results = searchWorkers(skill, village);
+    setSearchResults(results);
+    setLastSearch({ skill, village });
+    setCurrentPage('search-results');
+  };
+
+  const handleWorkerRegistration = (data: WorkerFormData) => {
+    try {
+      addWorker(data, 'self');
+      toast({
+        title: "Registration Successful!",
+        description: "You have been registered as a skilled worker.",
+      });
+      setCurrentPage('home');
+    } catch (error) {
+      toast({
+        title: "Registration Failed",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleAdminWorkerRegistration = (data: WorkerFormData, registeredBy: 'admin', adminName: string) => {
+    try {
+      addWorker(data, registeredBy, adminName);
+      toast({
+        title: "Worker Registered Successfully!",
+        description: `${data.name} has been registered by admin.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Registration Failed",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleToggleWorkerStatus = (workerId: string) => {
+    toggleWorkerStatus(workerId);
+    toast({
+      title: "Worker Status Updated",
+      description: "Worker status has been changed successfully.",
+    });
+  };
+
+  const handleDeleteWorker = (workerId: string) => {
+    deleteWorker(workerId);
+    toast({
+      title: "Worker Deleted",
+      description: "Worker has been removed from the system.",
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-warm-gradient">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-lg text-muted-foreground">Loading SkillMap...</p>
+        </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Header 
+        language={language}
+        onLanguageChange={setLanguage}
+        onNavigate={setCurrentPage}
+      />
+      
+      {currentPage === 'home' && (
+        <HeroSection 
+          language={language}
+          onSearch={handleSearch}
+        />
+      )}
+      
+      {currentPage === 'search-results' && (
+        <div className="container mx-auto px-4 py-12">
+          <SearchResults 
+            workers={searchResults}
+            language={language}
+            searchTerm={lastSearch.skill}
+            village={lastSearch.village}
+          />
+        </div>
+      )}
+      
+      {currentPage === 'register' && (
+        <div className="container mx-auto px-4 py-12">
+          <WorkerRegistration 
+            language={language}
+            onSubmit={handleWorkerRegistration}
+          />
+        </div>
+      )}
+      
+      {currentPage === 'admin' && (
+        <AdminDashboard 
+          language={language}
+          workers={workers}
+          onAddWorker={handleAdminWorkerRegistration}
+          onToggleWorkerStatus={handleToggleWorkerStatus}
+          onDeleteWorker={handleDeleteWorker}
+          onBack={() => setCurrentPage('home')}
+        />
+      )}
     </div>
   );
 };
