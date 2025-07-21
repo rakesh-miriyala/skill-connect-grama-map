@@ -61,7 +61,7 @@ export const WorkerRegistration = ({ language, onSubmit, isAdmin = false }: Work
       <Card className="shadow-warm">
         <CardHeader>
           <CardTitle className="text-2xl text-center">
-            {isAdmin ? 'Register Worker (Admin)' : t.registerWorker}
+            {isAdmin ? t.registerWorkerAdmin : t.registerWorker}
           </CardTitle>
         </CardHeader>
         
@@ -71,14 +71,14 @@ export const WorkerRegistration = ({ language, onSubmit, isAdmin = false }: Work
             <div className="space-y-2">
               <Label htmlFor="name" className="text-sm font-medium flex items-center gap-2">
                 <User className="h-4 w-4" />
-                Full Name
+                {t.fullName}
               </Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                 required
-                placeholder="Enter full name"
+                placeholder={t.enterFullName}
               />
             </div>
             
@@ -86,7 +86,7 @@ export const WorkerRegistration = ({ language, onSubmit, isAdmin = false }: Work
             <div className="space-y-2">
               <Label htmlFor="phone" className="text-sm font-medium flex items-center gap-2">
                 <Phone className="h-4 w-4" />
-                Phone Number
+                {t.phoneNumber}
               </Label>
               <Input
                 id="phone"
@@ -94,7 +94,7 @@ export const WorkerRegistration = ({ language, onSubmit, isAdmin = false }: Work
                 value={formData.phone}
                 onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
                 required
-                placeholder="Enter phone number"
+                placeholder={t.enterPhoneNumber}
               />
             </div>
             
@@ -102,14 +102,14 @@ export const WorkerRegistration = ({ language, onSubmit, isAdmin = false }: Work
             <div className="space-y-2">
               <Label htmlFor="village" className="text-sm font-medium flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
-                Village
+                {t.village}
               </Label>
               <Input
                 id="village"
                 value={formData.village}
                 onChange={(e) => setFormData(prev => ({ ...prev, village: e.target.value }))}
                 required
-                placeholder="Enter village name"
+                placeholder={t.enterVillageName}
               />
             </div>
             
@@ -117,7 +117,7 @@ export const WorkerRegistration = ({ language, onSubmit, isAdmin = false }: Work
             <div className="space-y-3">
               <Label className="text-sm font-medium flex items-center gap-2">
                 <Wrench className="h-4 w-4" />
-                Skills
+                {t.skills}
               </Label>
               
               {/* Selected Skills */}
@@ -143,7 +143,7 @@ export const WorkerRegistration = ({ language, onSubmit, isAdmin = false }: Work
                 <Input
                   value={newSkill}
                   onChange={(e) => setNewSkill(e.target.value)}
-                  placeholder="Add a skill"
+                  placeholder={t.addSkill}
                   onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill(newSkill))}
                 />
                 <Button
@@ -158,7 +158,7 @@ export const WorkerRegistration = ({ language, onSubmit, isAdmin = false }: Work
               
               {/* Common Skills */}
               <div className="space-y-2">
-                <p className="text-xs text-muted-foreground">Common skills:</p>
+                <p className="text-xs text-muted-foreground">{t.commonSkills}</p>
                 <div className="flex flex-wrap gap-2">
                   {commonSkills
                     .filter(skill => !formData.skills.includes(skill))
@@ -183,7 +183,7 @@ export const WorkerRegistration = ({ language, onSubmit, isAdmin = false }: Work
             <div className="space-y-2">
               <Label htmlFor="experience" className="text-sm font-medium flex items-center gap-2">
                 <Clock className="h-4 w-4" />
-                Years of Experience
+                {t.yearsExperience}
               </Label>
               <Input
                 id="experience"
@@ -193,20 +193,20 @@ export const WorkerRegistration = ({ language, onSubmit, isAdmin = false }: Work
                 value={formData.experience}
                 onChange={(e) => setFormData(prev => ({ ...prev, experience: parseInt(e.target.value) || 0 }))}
                 required
-                placeholder="Enter years of experience"
+                placeholder={t.enterYearsExperience}
               />
             </div>
             
             {/* Description */}
             <div className="space-y-2">
               <Label htmlFor="description" className="text-sm font-medium">
-                Description (Optional)
+                {t.description}
               </Label>
               <Textarea
                 id="description"
                 value={formData.description}
                 onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                placeholder="Describe your work experience and specializations..."
+                placeholder={t.descriptionPlaceholder}
                 rows={3}
               />
             </div>
@@ -217,7 +217,7 @@ export const WorkerRegistration = ({ language, onSubmit, isAdmin = false }: Work
               variant="hero"
               disabled={formData.skills.length === 0}
             >
-              Register Worker
+              {t.registerButton}
             </Button>
           </form>
         </CardContent>
