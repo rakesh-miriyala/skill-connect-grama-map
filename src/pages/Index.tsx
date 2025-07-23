@@ -4,20 +4,25 @@ import { HeroSection } from "@/components/HeroSection";
 import { SearchResults } from "@/components/SearchResults";
 import { WorkerRegistration } from "@/components/WorkerRegistration";
 import { AdminDashboard } from "@/components/AdminDashboard";
+import { Auth } from "@/pages/Auth";
 import { useWorkers } from "@/hooks/useWorkers";
+import { useAuth } from "@/hooks/useAuth";
 import { Language } from "@/components/LanguageToggle";
 import { Worker, WorkerFormData } from "@/types/worker";
 import { useToast } from "@/hooks/use-toast";
+import { User } from '@supabase/supabase-js';
 
-type Page = 'home' | 'register' | 'admin' | 'search-results';
+type Page = 'home' | 'register' | 'admin' | 'search-results' | 'auth';
 
 const Index = () => {
   const [language, setLanguage] = useState<Language>('en');
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const [searchResults, setSearchResults] = useState<Worker[]>([]);
   const [lastSearch, setLastSearch] = useState<{ skill: string; village: string }>({ skill: '', village: '' });
+  const [authenticatedAdmin, setAuthenticatedAdmin] = useState<User | null>(null);
   
   const { workers, loading, addWorker, searchWorkers, toggleWorkerStatus, deleteWorker } = useWorkers();
+  const { user, isAdmin, signOut } = useAuth();
   const { toast } = useToast();
 
   const handleSearch = (skill: string, village: string) => {
@@ -76,6 +81,38 @@ const Index = () => {
     });
   };
 
+  const handleNavigate = (page: Page) => {
+    if (page === 'admin') {
+      if (isAdmin && user) {
+        setAuthenticatedAdmin(user);
+        setCurrentPage('admin');
+      } else {
+        setCurrentPage('auth');
+      }
+    } else {
+      setCurrentPage(page);
+    }
+  };
+
+  const handleAuthSuccess = (adminUser: User) => {
+    setAuthenticatedAdmin(adminUser);
+    setCurrentPage('admin');
+    toast({
+      title: "Welcome Admin!",
+      description: "You have successfully logged in to the admin panel.",
+    });
+  };
+
+  const handleAdminLogout = async () => {
+    await signOut();
+    setAuthenticatedAdmin(null);
+    setCurrentPage('home');
+    toast({
+      title: "Logged Out",
+      description: "You have been logged out successfully.",
+    });
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-warm-gradient">
@@ -92,7 +129,10 @@ const Index = () => {
       <Header 
         language={language}
         onLanguageChange={setLanguage}
-        onNavigate={setCurrentPage}
+        onNavigate={handleNavigate}
+        isAdmin={isAdmin}
+        user={user}
+        onLogout={handleAdminLogout}
       />
       
       {currentPage === 'home' && (
@@ -122,7 +162,14 @@ const Index = () => {
         </div>
       )}
       
-      {currentPage === 'admin' && (
+      {currentPage === 'auth' && (
+        <Auth 
+          onBack={() => setCurrentPage('home')}
+          onAuthSuccess={handleAuthSuccess}
+        />
+      )}
+      
+      {currentPage === 'admin' && authenticatedAdmin && (
         <AdminDashboard 
           language={language}
           workers={workers}
