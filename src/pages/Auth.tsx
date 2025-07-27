@@ -55,29 +55,44 @@ export const Auth = ({ onBack, onAuthSuccess }: AuthProps) => {
 
   const checkUserRole = async (userId: string) => {
     try {
+      console.log('Checking role for user:', userId);
       const { data, error } = await supabase
         .from('profiles')
         .select('role')
         .eq('id', userId)
         .single();
 
+      console.log('Role check result:', { data, error });
+
       if (error) {
         console.error('Error checking user role:', error);
+        toast({
+          title: "Error",
+          description: "Failed to check admin privileges. Please try signing out and back in.",
+          variant: "destructive",
+        });
         return;
       }
 
       if (data?.role === 'admin') {
+        console.log('User is admin, calling onAuthSuccess');
         onAuthSuccess(user!);
       } else {
+        console.log('User is not admin, role:', data?.role);
         toast({
-          title: "Access Denied",
-          description: "You need admin privileges to access this area.",
+          title: "Access Denied", 
+          description: `You need admin privileges to access this area. Current role: ${data?.role}. Please sign out and back in if you were recently granted admin access.`,
           variant: "destructive",
         });
         await supabase.auth.signOut();
       }
     } catch (error) {
       console.error('Error checking user role:', error);
+      toast({
+        title: "Error",
+        description: "An error occurred while checking privileges. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
