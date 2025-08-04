@@ -34,12 +34,13 @@ export const SearchResults = ({ workers, language, searchTerm, village }: Search
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          Search Results
+          {searchTerm || village ? 'Search Results' : 'Available Skilled Workers'}
         </h2>
         <p className="text-muted-foreground">
-          Found {workers.length} skilled worker{workers.length !== 1 ? 's' : ''}
+          {searchTerm || village ? 'Found' : 'Showing'} {workers.length} skilled worker{workers.length !== 1 ? 's' : ''}
           {searchTerm && ` for "${searchTerm}"`}
           {village && ` in ${village}`}
+          {!searchTerm && !village && ' in your community'}
         </p>
       </div>
       

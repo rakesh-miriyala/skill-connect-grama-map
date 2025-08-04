@@ -136,10 +136,20 @@ const Index = () => {
       />
       
       {currentPage === 'home' && (
-        <HeroSection 
-          language={language}
-          onSearch={handleSearch}
-        />
+        <>
+          <HeroSection 
+            language={language}
+            onSearch={handleSearch}
+          />
+          <div className="container mx-auto px-4 py-12">
+            <SearchResults 
+              workers={workers.filter(worker => worker.isActive)}
+              language={language}
+              searchTerm=""
+              village=""
+            />
+          </div>
+        </>
       )}
       
       {currentPage === 'search-results' && (
