@@ -49,9 +49,9 @@ const Index = () => {
     }
   };
 
-  const handleAdminWorkerRegistration = (data: WorkerFormData, registeredBy: 'admin', adminName: string) => {
+  const handleAdminWorkerRegistration = async (data: WorkerFormData, registeredBy: 'admin', adminName: string) => {
     try {
-      addWorker(data, registeredBy, adminName);
+      await addWorker(data, registeredBy, adminName);
       toast({
         title: "Worker Registered Successfully!",
         description: `${data.name} has been registered by admin.`,
