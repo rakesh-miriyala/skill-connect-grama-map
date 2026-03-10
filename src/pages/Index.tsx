@@ -32,9 +32,9 @@ const Index = () => {
     setCurrentPage('search-results');
   };
 
-  const handleWorkerRegistration = (data: WorkerFormData) => {
+  const handleWorkerRegistration = async (data: WorkerFormData) => {
     try {
-      addWorker(data, 'self');
+      await addWorker(data, 'self');
       toast({
         title: "Registration Successful!",
         description: "You have been registered as a skilled worker.",
@@ -49,9 +49,9 @@ const Index = () => {
     }
   };
 
-  const handleAdminWorkerRegistration = (data: WorkerFormData, registeredBy: 'admin', adminName: string) => {
+  const handleAdminWorkerRegistration = async (data: WorkerFormData, registeredBy: 'admin', adminName: string) => {
     try {
-      addWorker(data, registeredBy, adminName);
+      await addWorker(data, registeredBy, adminName);
       toast({
         title: "Worker Registered Successfully!",
         description: `${data.name} has been registered by admin.`,
@@ -65,20 +65,28 @@ const Index = () => {
     }
   };
 
-  const handleToggleWorkerStatus = (workerId: string) => {
-    toggleWorkerStatus(workerId);
-    toast({
-      title: "Worker Status Updated",
-      description: "Worker status has been changed successfully.",
-    });
+  const handleToggleWorkerStatus = async (workerId: string) => {
+    try {
+      await toggleWorkerStatus(workerId);
+      toast({
+        title: "Worker Status Updated",
+        description: "Worker status has been changed successfully.",
+      });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to update status.", variant: "destructive" });
+    }
   };
 
-  const handleDeleteWorker = (workerId: string) => {
-    deleteWorker(workerId);
-    toast({
-      title: "Worker Deleted",
-      description: "Worker has been removed from the system.",
-    });
+  const handleDeleteWorker = async (workerId: string) => {
+    try {
+      await deleteWorker(workerId);
+      toast({
+        title: "Worker Deleted",
+        description: "Worker has been removed from the system.",
+      });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to delete worker.", variant: "destructive" });
+    }
   };
 
   const handleNavigate = (page: Page) => {

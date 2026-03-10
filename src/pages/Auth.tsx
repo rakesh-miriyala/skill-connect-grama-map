@@ -23,14 +23,12 @@ export const Auth = ({ onBack, onAuthSuccess }: AuthProps) => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Check if user has admin role
           setTimeout(() => {
             checkUserRole(session.user.id);
           }, 0);
@@ -38,7 +36,6 @@ export const Auth = ({ onBack, onAuthSuccess }: AuthProps) => {
       }
     );
 
-    // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
@@ -57,10 +54,11 @@ export const Auth = ({ onBack, onAuthSuccess }: AuthProps) => {
     try {
       console.log('Checking role for user:', userId);
       const { data, error } = await supabase
-        .from('profiles')
+        .from('user_roles')
         .select('role')
-        .eq('id', userId)
-        .single();
+        .eq('user_id', userId)
+        .eq('role', 'admin')
+        .maybeSingle();
 
       console.log('Role check result:', { data, error });
 
@@ -74,14 +72,14 @@ export const Auth = ({ onBack, onAuthSuccess }: AuthProps) => {
         return;
       }
 
-      if (data?.role === 'admin') {
+      if (data) {
         console.log('User is admin, calling onAuthSuccess');
         onAuthSuccess(user!);
       } else {
-        console.log('User is not admin, role:', data?.role);
+        console.log('User is not admin');
         toast({
-          title: "Access Denied", 
-          description: `You need admin privileges to access this area. Current role: ${data?.role}. Please sign out and back in if you were recently granted admin access.`,
+          title: "Access Denied",
+          description: "You need admin privileges to access this area. Please sign out and back in if you were recently granted admin access.",
           variant: "destructive",
         });
         await supabase.auth.signOut();

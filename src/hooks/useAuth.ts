@@ -9,14 +9,12 @@ export const useAuth = () => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Check admin status
           setTimeout(async () => {
             await checkAdminStatus(session.user.id);
           }, 0);
@@ -28,7 +26,6 @@ export const useAuth = () => {
       }
     );
 
-    // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
@@ -48,12 +45,13 @@ export const useAuth = () => {
   const checkAdminStatus = async (userId: string) => {
     try {
       const { data, error } = await supabase
-        .from('profiles')
+        .from('user_roles')
         .select('role')
-        .eq('id', userId)
-        .single();
+        .eq('user_id', userId)
+        .eq('role', 'admin')
+        .maybeSingle();
 
-      if (!error && data?.role === 'admin') {
+      if (!error && data) {
         setIsAdmin(true);
       } else {
         setIsAdmin(false);
