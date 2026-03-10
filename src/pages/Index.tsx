@@ -32,9 +32,9 @@ const Index = () => {
     setCurrentPage('search-results');
   };
 
-  const handleWorkerRegistration = (data: WorkerFormData) => {
+  const handleWorkerRegistration = async (data: WorkerFormData) => {
     try {
-      addWorker(data, 'self');
+      await addWorker(data, 'self');
       toast({
         title: "Registration Successful!",
         description: "You have been registered as a skilled worker.",
