@@ -22,9 +22,10 @@ export const Header = ({ language, onLanguageChange, onNavigate, isAdmin, user, 
           {/* Logo */}
           <button 
             onClick={() => onNavigate('home')}
-            className="text-2xl font-bold text-primary hover:text-primary/80 transition-smooth"
+            className="flex items-center gap-2 hover:opacity-80 transition-smooth"
           >
-            SkillMap
+            <img src="/skillmap-logo.png" alt="SkillMap Logo" width={32} height={32} />
+            <span className="text-2xl font-bold text-primary">SkillMap</span>
           </button>
           
           {/* Navigation */}
