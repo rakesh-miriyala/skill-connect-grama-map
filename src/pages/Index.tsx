@@ -13,7 +13,7 @@ import { Worker, WorkerFormData } from "@/types/worker";
 import { useToast } from "@/hooks/use-toast";
 import { User } from '@supabase/supabase-js';
 
-type Page = 'home' | 'register' | 'admin' | 'search-results' | 'auth';
+type Page = 'home' | 'register' | 'admin' | 'search-results' | 'auth' | 'about';
 
 const Index = () => {
   const [language, setLanguage] = useState<Language>('en');
