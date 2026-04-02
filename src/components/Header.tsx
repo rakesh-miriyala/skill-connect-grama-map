@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { LanguageToggle, translations, Language } from "./LanguageToggle";
-import { UserPlus, Settings, LogOut } from "lucide-react";
+import { UserPlus, Settings, LogOut, Info } from "lucide-react";
 import { User } from '@supabase/supabase-js';
 
 interface HeaderProps {
