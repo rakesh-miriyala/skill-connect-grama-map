@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { LanguageToggle, translations, Language } from "./LanguageToggle";
-import { UserPlus, Settings, LogOut } from "lucide-react";
+import { UserPlus, Settings, LogOut, Info } from "lucide-react";
 import { User } from '@supabase/supabase-js';
 
 interface HeaderProps {
   language: Language;
   onLanguageChange: (lang: Language) => void;
-  onNavigate: (page: 'home' | 'register' | 'admin' | 'auth') => void;
+  onNavigate: (page: 'home' | 'register' | 'admin' | 'auth' | 'about') => void;
   isAdmin?: boolean;
   user?: User | null;
   onLogout?: () => void;
@@ -30,6 +30,16 @@ export const Header = ({ language, onLanguageChange, onNavigate, isAdmin, user, 
           
           {/* Navigation */}
           <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onNavigate('about')}
+              className="hidden sm:flex"
+            >
+              <Info className="mr-2 h-4 w-4" />
+              About
+            </Button>
+            
             <Button
               variant="warm"
               onClick={() => onNavigate('register')}

@@ -4,6 +4,7 @@ import { HeroSection } from "@/components/HeroSection";
 import { SearchResults } from "@/components/SearchResults";
 import { WorkerRegistration } from "@/components/WorkerRegistration";
 import { AdminDashboard } from "@/components/AdminDashboard";
+import { AboutPage } from "@/components/AboutPage";
 import { Auth } from "@/pages/Auth";
 import { useWorkers } from "@/hooks/useWorkers";
 import { useAuth } from "@/hooks/useAuth";
@@ -12,7 +13,7 @@ import { Worker, WorkerFormData } from "@/types/worker";
 import { useToast } from "@/hooks/use-toast";
 import { User } from '@supabase/supabase-js';
 
-type Page = 'home' | 'register' | 'admin' | 'search-results' | 'auth';
+type Page = 'home' | 'register' | 'admin' | 'search-results' | 'auth' | 'about';
 
 const Index = () => {
   const [language, setLanguage] = useState<Language>('en');
@@ -187,6 +188,10 @@ const Index = () => {
         />
       )}
       
+      {currentPage === 'about' && (
+        <AboutPage language={language} />
+      )}
+
       {currentPage === 'admin' && authenticatedAdmin && (
         <AdminDashboard 
           language={language}
