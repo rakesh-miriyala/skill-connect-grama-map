@@ -6,7 +6,7 @@ import { User } from '@supabase/supabase-js';
 interface HeaderProps {
   language: Language;
   onLanguageChange: (lang: Language) => void;
-  onNavigate: (page: 'home' | 'register' | 'admin' | 'auth') => void;
+  onNavigate: (page: 'home' | 'register' | 'admin' | 'auth' | 'about') => void;
   isAdmin?: boolean;
   user?: User | null;
   onLogout?: () => void;
