@@ -188,6 +188,10 @@ const Index = () => {
         />
       )}
       
+      {currentPage === 'about' && (
+        <AboutPage language={language} />
+      )}
+
       {currentPage === 'admin' && authenticatedAdmin && (
         <AdminDashboard 
           language={language}

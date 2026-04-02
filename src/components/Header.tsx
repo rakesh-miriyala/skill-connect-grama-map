@@ -31,6 +31,16 @@ export const Header = ({ language, onLanguageChange, onNavigate, isAdmin, user, 
           {/* Navigation */}
           <div className="flex items-center gap-4">
             <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onNavigate('about')}
+              className="hidden sm:flex"
+            >
+              <Info className="mr-2 h-4 w-4" />
+              About
+            </Button>
+            
+            <Button
               variant="warm"
               onClick={() => onNavigate('register')}
               className="hidden sm:flex"
