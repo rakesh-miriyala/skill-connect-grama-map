@@ -4,6 +4,7 @@ import { HeroSection } from "@/components/HeroSection";
 import { SearchResults } from "@/components/SearchResults";
 import { WorkerRegistration } from "@/components/WorkerRegistration";
 import { AdminDashboard } from "@/components/AdminDashboard";
+import { AboutPage } from "@/components/AboutPage";
 import { Auth } from "@/pages/Auth";
 import { useWorkers } from "@/hooks/useWorkers";
 import { useAuth } from "@/hooks/useAuth";
